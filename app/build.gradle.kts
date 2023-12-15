@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.dashboard"
-        minSdk = 33
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -37,8 +37,9 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation("com.google.firebase:firebase-firestore:24.9.1")
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-database:20.3.0")
+    implementation("com.google.firebase:firebase-firestore:24.10.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -50,6 +51,9 @@ dependencies {
 
     //
     implementation("com.google.code.gson:gson:2.9.1")
+
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
 
 }

@@ -12,88 +12,87 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.Domain.PopularDomain;
 import com.example.dashboard.Helper.ChangeNumberItemsListener;
 import com.example.dashboard.Helper.ManagementCart;
 import com.example.dashboard.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
-    ArrayList<PopularDomain> listItemSelected;
-    private ManagementCart managementCart;
-    ChangeNumberItemsListener changeNumberItemsListener;
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+    ArrayList<CartDomain> listItem;
+    Context context;
+//    private ManagementCart managementCart;
 
-    public CartAdapter(ArrayList<PopularDomain> listItemSelected, Context context, ChangeNumberItemsListener changeNumberItemsListener) {
-        this.listItemSelected = listItemSelected;
-        managementCart = new ManagementCart(context);
-        this.changeNumberItemsListener = changeNumberItemsListener;
+    public CartAdapter(ArrayList<CartDomain> listItem, Context context) {
+        this.listItem = listItem;
+        this.context = context;
+//        managementCart = new ManagementCart(context);
     }
 
     @NonNull
     @Override
-    public CartAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CartAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_cart, parent, false);
-        return new Viewholder(inflate);
+        return new ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartAdapter.Viewholder holder, int position) {
-        holder.titleTxt.setText(listItemSelected.get(position).getTitle());
-        holder.priceEachItem.setText(listItemSelected.get(position).getPrice() + " VNĐ");
+    public void onBindViewHolder(@NonNull CartAdapter.ViewHolder holder, int position) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        holder.titleTxt.setText(listItem.get(position).getProductName());
+        holder.date.setText(listItem.get(position).getCurrentDate() + "\n" + listItem.get(position).getCurrentTime());
+
 
         try {
-            double price = Double.parseDouble(listItemSelected.get(position).getPrice());
-            holder.totalEachItem.setText(Math.round(listItemSelected.get(position).getNumberInCart() * price) + " VNĐ");
+            double totalEachItem = listItem.get(position).getTotalPrice();
+            String format = formatter.format(totalEachItem);
+            holder.totalEachItem.setText("\t" + format + " VNĐ");
         } catch (NumberFormatException e) {
-            holder.totalEachItem.setText("Error: Price is not a valid number");
+            holder.totalEachItem.setText("Lôi: Giá tiền không hợp lệ");
         }
 
-        holder.numberItem.setText(String.valueOf(listItemSelected.get(position).getNumberInCart()));
+        holder.numberItem.setText(String.valueOf(listItem.get(position).getTotalQuanity()));
 
-        Glide.with(holder.itemView.getContext())
-                .load(listItemSelected.get(position).getPicURL())
-                .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
-                .into(holder.pic); //hiển thị trên ImageView tương ứng
-
-        holder.plusCartBtn.setOnClickListener(v -> managementCart.plusNumberItem(listItemSelected, position, new ChangeNumberItemsListener() {
-            @Override
-            public void change() {
-                notifyDataSetChanged();
-                changeNumberItemsListener.change();
-            }
-        }));
-
-        holder.minusCartBtn.setOnClickListener(v -> managementCart.minusNumberItem(listItemSelected, position, new ChangeNumberItemsListener() {
-            @Override
-            public void change() {
-                notifyDataSetChanged();
-                changeNumberItemsListener.change();
-            }
-        }));
+//        Glide.with(holder.itemView.getContext())
+//                .load(listItem.get(position).getPicURL())
+//                .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
+//                .into(holder.pic); //hiển thị trên ImageView tương ứng
     }
+
 
 
     @Override
     public int getItemCount() {
-        return listItemSelected.size();
+        return listItem.size();
     }
 
-    public class Viewholder extends RecyclerView.ViewHolder{
-        TextView titleTxt, priceEachItem, totalEachItem, minusCartBtn, plusCartBtn, numberItem;
-        ImageView pic;
-        public Viewholder(@NonNull View itemView) {
-            super(itemView);
+    public ArrayList<CartDomain> getListItem() {
+        return listItem;
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleTxt, date, totalEachItem, numberItem;
+        ImageView pic;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
             titleTxt = itemView.findViewById(R.id.titleTxt);
-            priceEachItem = itemView.findViewById(R.id.priceEachItem);
+            date = itemView.findViewById(R.id.date);
             totalEachItem = itemView.findViewById(R.id.totalEachItem);
-            minusCartBtn = itemView.findViewById(R.id.minusCartBtn);
-            plusCartBtn = itemView.findViewById(R.id.plusCartBtn);
             numberItem = itemView.findViewById(R.id.numberItem);
 
             pic = itemView.findViewById(R.id.pic);
+
+            date.setVisibility(View.GONE);
         }
     }
-
 }
+
+

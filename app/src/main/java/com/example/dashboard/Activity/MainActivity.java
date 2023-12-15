@@ -5,27 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.example.dashboard.Adapter.PopularAdapter;
 import com.example.dashboard.Domain.PopularDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,20 +30,20 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     //Popular RecyclerView
     private RecyclerView.Adapter adapterPopular;
-    //add list view ms
-    private RecyclerView recyclerViewPopular,recyclerview_Laptop,recyclerview_phone,recyclerview_watch, recyclerview_tv ;
+    private  RecyclerView recyclerViewPopular;
     FirebaseFirestore fStore;
+    ViewFlipper viewFlipper;
 
 
-    //add update menu
+    //add and update menu
     TextView textView13,textView6;
-    LinearLayout view_Laptop, view_phone,view_watch,view_tv;
+    LinearLayout  view_phone,view_watch,view_tv;
     boolean btn=true;
     boolean check_title_menu = true;
 
     LinearLayout cat_phone,cat_laptop,cat_watch,cat_tv,cat_view_all,title_menu;
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,16 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         fStore = FirebaseFirestore.getInstance();
 
+        motionPictures();
         popRecyclerView();
         bottomNavigation();
 
 
-        /// add duongbt
-
-        view_Laptop = findViewById(R.id.view_Laptop);
-        view_phone = findViewById(R.id.view_phone);
-        view_watch = findViewById(R.id.view_watch);
-        view_tv = findViewById(R.id.view_tv);
         textView13 = findViewById(R.id.textView13);
         textView6 = findViewById(R.id.textView6);
         recyclerViewPopular = findViewById(R.id.view1);
@@ -82,18 +72,25 @@ public class MainActivity extends AppCompatActivity {
         });
         textView13.setOnClickListener(view -> hide_appear());
         cat_laptop = findViewById(R.id.cat_laptop);
-        cat_laptop.setOnClickListener((View v) -> smoothScrollTo(view_Laptop));
+        cat_laptop.setOnClickListener((View v) -> {
+            Intent intent = new Intent(MainActivity.this,LaptopActivity.class);
+            startActivity(intent);
+        });
         cat_phone = findViewById(R.id.cat_phone);
-        cat_phone.setOnClickListener(view -> smoothScrollTo(view_phone));
+        cat_phone.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,PhoneActivity.class);
+            startActivity(intent);
+        });
         cat_watch = findViewById(R.id.cat_watch);
-        cat_watch.setOnClickListener(v -> smoothScrollTo(view_watch));
+        cat_watch.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,SmartWatchActicvity.class);
+            startActivity(intent);
+        });
         cat_tv = findViewById(R.id.cat_tv);
-        cat_tv.setOnClickListener(v -> smoothScrollTo(view_tv));
-
-
-
-
-        cat_view_all = findViewById(R.id.cat_view_all);
+        cat_tv.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,TiviActivity.class);
+            startActivity(intent);
+        });
     }
     // ẩn hiện danh mục menu
     public void hide_appear(){
@@ -117,12 +114,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    private  void motionPictures(){
+        viewFlipper = findViewById(R.id.viewFlipper);
 
+        // Thiết lập chuyển đổi tự động giữa các view
+        viewFlipper.setAutoStart(true);
+        viewFlipper.setFlipInterval(2000); // Thời gian chờ giữa các chuyển đổi (1,5 giây)
+
+        // Khai báo các sự kiện chuyển đổi
+        viewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
+        viewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
+
+        // Tạo một ObjectAnimator để thay đổi thuộc tính "alpha" của viewFlipper
+        ObjectAnimator animator = ObjectAnimator.ofFloat(viewFlipper, "alpha", 0f, 1f);
+        animator.setDuration(4000); // Thời gian chuyển đổi là 4 giây
+
+        // Bắt đầu chuyển đổi
+        animator.start();
+    }
 
 
     //Thanh điều hướng
     private void bottomNavigation() {
-        LinearLayout homeBtn = findViewById(R.id.homeBtn);
+        FloatingActionButton homeBtn = findViewById(R.id.homeBtn);
         LinearLayout cartBtn = findViewById(R.id.cartBtn);
 
         homeBtn.setOnClickListener(v -> {
@@ -146,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()){
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
                                 items.add(popularDomain);
@@ -154,116 +168,6 @@ public class MainActivity extends AppCompatActivity {
                             // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
                             adapterPopular = new PopularAdapter(items);
                             recyclerViewPopular.setAdapter(adapterPopular);
-                            // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                            adapterPopular.notifyDataSetChanged();
-
-                        } else {
-                            // Xử lý lỗi khi task không thành công
-                            Log.d("popRecyclerView", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
-
-        // add data iphone
-
-        recyclerview_Laptop = findViewById(R.id.recyclerview_Laptop);
-        recyclerview_Laptop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        fStore.collection("PopularProducts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-//                                items.add(popularDomain);
-//                            }
-                            // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-//                            adapterPopular = new PopularAdapter(items);
-                            recyclerview_Laptop.setAdapter(adapterPopular);
-                            // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                            adapterPopular.notifyDataSetChanged();
-
-                        } else {
-                            // Xử lý lỗi khi task không thành công
-                            Log.d("popRecyclerView", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        //add data phone
-        recyclerview_phone = findViewById(R.id.recyclerview_phone);
-        recyclerview_phone.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        fStore.collection("PopularProducts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-//                                items.add(popularDomain);
-//                            }
-                            // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-//                            adapterPopular = new PopularAdapter(items);
-                            recyclerview_phone.setAdapter(adapterPopular);
-                            // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                            adapterPopular.notifyDataSetChanged();
-
-                        } else {
-                            // Xử lý lỗi khi task không thành công
-                            Log.d("popRecyclerView", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-        //add data watch
-        recyclerview_watch = findViewById(R.id.recyclerview_watch);
-        recyclerview_watch.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        fStore.collection("PopularProducts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-//                                items.add(popularDomain);
-//                            }
-                            // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-//                            adapterPopular = new PopularAdapter(items);
-                            recyclerview_watch.setAdapter(adapterPopular);
-                            // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                            adapterPopular.notifyDataSetChanged();
-
-                        } else {
-                            // Xử lý lỗi khi task không thành công
-                            Log.d("popRecyclerView", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        //add data tv
-        recyclerview_tv = findViewById(R.id.recyclerview_tv);
-        recyclerview_tv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        fStore.collection("PopularProducts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-//                                items.add(popularDomain);
-//                            }
-                            // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-//                            adapterPopular = new PopularAdapter(items);
-                            recyclerview_tv.setAdapter(adapterPopular);
                             // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
                             adapterPopular.notifyDataSetChanged();
 

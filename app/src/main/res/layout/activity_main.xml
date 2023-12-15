@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -111,46 +112,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="16dp">
 
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/banner"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <ViewFlipper
+                    android:id="@+id/viewFlipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <!-- View 1 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_1" />
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Giảm giá 20% cho \nđiện thoại"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    <!-- View 2 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_2" />
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="80dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/orange_button"
-                    android:gravity="center"
-                    android:text="Buy now"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView4"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView4" />
+                    <!-- View 3 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_3" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_4" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_5" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_6" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/banner_7" />
+
+                </ViewFlipper>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -196,9 +212,9 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Laptop"
+                        android:textStyle="bold"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -224,9 +240,9 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Điện Thoại"
+                        android:textStyle="bold"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -252,9 +268,9 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Smart Watch"
+                        android:textStyle="bold"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -280,9 +296,9 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Smart TV"
+                        android:textStyle="bold"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -308,11 +324,12 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Xem Thêm"
+                        android:textStyle="bold"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </LinearLayout>
+
 
 
             <LinearLayout
@@ -336,10 +353,10 @@
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="24dp"
                     android:text="Xem tất cả"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
+                    android:textSize="16.5sp"
+                    android:textColor="@color/green" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -348,165 +365,8 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-
-            ///laptop
-
-
-            <LinearLayout
-                android:id="@+id/view_Laptop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView_Laptop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="Lap top"
-                    android:textColor="@color/black"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_LaptopAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="Xem tất cả"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_Laptop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-
-            <LinearLayout
-                android:id="@+id/view_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="Điện thoại"
-                    android:textColor="@color/black"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_phoneAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="Xem tất cả"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_phone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-      // smart watch
-
-            <LinearLayout
-                android:id="@+id/view_watch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView_watch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="Smart watch"
-                    android:textColor="@color/black"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_watchAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="Xem tất cả"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_watch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-            //TV
-
-            <LinearLayout
-                android:id="@+id/view_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="Smart TV"
-                    android:textColor="@color/black"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_tvAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="Xem tất cả"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_tv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-
+                android:paddingEnd="16dp" />
         </LinearLayout>
-
-
-
     </ScrollView>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -517,12 +377,16 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom">
+            android:layout_height="65dp"
+            android:layout_gravity="bottom"
+            app:fabCradleMargin="6dp"
+            app:fabCradleVerticalOffset="6dp"
+            app:fabCradleRoundedCornerRadius="40dp">
 
             <LinearLayout
-                android:id="@+id/homeBtn"
+                android:id="@+id/allProdcutBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -558,7 +422,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginRight="25dp">
 
                     <ImageView
                         android:id="@+id/imageView10"
@@ -567,7 +432,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
-                        android:padding="2dp"
+                        android:padding="2.5dp"
                         android:src="@drawable/btn_2" />
 
                     <TextView
@@ -584,6 +449,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
+                    android:layout_marginLeft="10dp"
                     android:orientation="vertical">
 
                     <ImageView
@@ -633,5 +499,14 @@
             </LinearLayout>
 
         </com.google.android.material.bottomappbar.BottomAppBar>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/home"
+            app:backgroundTint="@color/green"
+            app:maxImageSize="33dp"
+            app:tint="@color/white"
+            app:layout_anchor="@+id/app_bar"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

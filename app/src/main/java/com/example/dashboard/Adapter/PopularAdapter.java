@@ -46,6 +46,8 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
         holder.scoreTxt.setText("" + items.get(position).getScore());
         holder.reviewTxt.setText("" + items.get(position).getReview());
 
+
+
         //dùng thư viện để load ảnh
         Glide.with(context)
                 .load(items.get(position).getPicURL())
@@ -67,10 +69,9 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
         return items.size();
     }
 
-    public class Viewholder extends RecyclerView.ViewHolder {
+    public class Viewholder extends RecyclerView.ViewHolder{
         TextView scoreTxt, titleTxtt, feeTxt, reviewTxt;
         ImageView pic;
-
         public Viewholder(@NonNull View itemView) {
             super(itemView);
 
