@@ -67,9 +67,10 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
         return items.size();
     }
 
-    public class Viewholder extends RecyclerView.ViewHolder{
+    public class Viewholder extends RecyclerView.ViewHolder {
         TextView scoreTxt, titleTxtt, feeTxt, reviewTxt;
         ImageView pic;
+
         public Viewholder(@NonNull View itemView) {
             super(itemView);
 
