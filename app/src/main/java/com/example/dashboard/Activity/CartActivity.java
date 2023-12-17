@@ -34,8 +34,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+//import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class CartActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
@@ -128,27 +128,28 @@ public class CartActivity extends AppCompatActivity {
             }
         }
 
-        @Override
-        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1
-                , float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-            new RecyclerViewSwipeDecorator.Builder(CartActivity.this, c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive)
-                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(CartActivity.this, R.color.red))
-                    .addSwipeLeftActionIcon(R.drawable.delete)
-                    .create()
-                    .decorate();
-
-            super.onChildDraw(c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive);
-        }
+//        @Override
+//        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1
+//                , float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//
+//            new Builder(CartActivity.this, c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive)
+//                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(CartActivity.this, R.color.red))
+//                    .addSwipeLeftActionIcon(R.drawable.delete)
+//                    .create()
+//                    .decorate();
+//
+//            super.onChildDraw(c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive);
+//        }
     };
+
 
     //Hàm tạo danh sách mặt hàng trong giỏ hàng và hiển thị
     private void initList() {
         // Tạo linear layout hướng dọc
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager); //set RecyclerView vào Linear Layout
         listCart = new ArrayList<>(); //Khởi tạo ArrayList cho CartActivity
-        cartAdapter = new CartAdapter(listCart,this); //tạo 1 adapter mới quản lý dữ liệu của arraylist
+        cartAdapter = new CartAdapter(listCart, this); //tạo 1 adapter mới quản lý dữ liệu của arraylist
         recyclerView.setAdapter(cartAdapter); //set adapter cho recyclerView
 
         //Lấy dữ liệu trong collection của user hiện tại
@@ -216,7 +217,6 @@ public class CartActivity extends AppCompatActivity {
     }
 
 
-
     private void initView() {
         totalFeeTxt = findViewById(R.id.totalFeeTxt);
         deliveryTxt = findViewById(R.id.deliveryTxt);
@@ -230,4 +230,6 @@ public class CartActivity extends AppCompatActivity {
 
         backBtn = findViewById(R.id.backBtn);
     }
+
+
 }

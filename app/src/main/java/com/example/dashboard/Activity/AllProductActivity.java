@@ -16,7 +16,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.dashboard.Adapter.PopularAdapter;
+import com.example.dashboard.Adapter.ProductTypeAdapter;
 import com.example.dashboard.Domain.PopularDomain;
+import com.example.dashboard.Domain.ProductTypeDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class AllProductActivity extends AppCompatActivity {
-    private RecyclerView.Adapter adapterPopular;
+    private ProductTypeAdapter ProductTypeAdapter;
     ScrollView ScrollView_allproduct;
     LinearLayout view_phone;
     RecyclerView recyclerview_allproduct_laptop, recyclerview_allproduct_phone, recyclerview_allproduct_watch, recyclerview_allproduct_tivi;
@@ -55,10 +57,10 @@ public class AllProductActivity extends AppCompatActivity {
 
             }
         });
-        ArrayList<PopularDomain> items_laptop = new ArrayList<>();
-        ArrayList<PopularDomain> items_phone = new ArrayList<>();
-        ArrayList<PopularDomain> items_smartwatch = new ArrayList<>();
-        ArrayList<PopularDomain> items_tivi = new ArrayList<>();
+        ArrayList<ProductTypeDomain> items_laptop = new ArrayList<>();
+        ArrayList<ProductTypeDomain> items_phone = new ArrayList<>();
+        ArrayList<ProductTypeDomain> items_smartwatch = new ArrayList<>();
+        ArrayList<ProductTypeDomain> items_tivi = new ArrayList<>();
         popRecyclerView_AllProduct(recyclerview_allproduct_laptop,items_laptop,"LapTop");
         popRecyclerView_AllProduct(recyclerview_allproduct_phone,items_phone,"Điện Thoại");
         popRecyclerView_AllProduct(recyclerview_allproduct_watch,items_smartwatch,"Smart Watch");
@@ -66,7 +68,7 @@ public class AllProductActivity extends AppCompatActivity {
 
     }
 
-    private void popRecyclerView_AllProduct( RecyclerView RecyclerView,  ArrayList<PopularDomain> items ,String v ) {
+    private void popRecyclerView_AllProduct( RecyclerView RecyclerView,  ArrayList<ProductTypeDomain> items ,String v ) {
         RecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -75,16 +77,16 @@ public class AllProductActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         if ( documentSnapshot.getData().get("category").equals(v)){
 //                            Toast.makeText(AllProductActivity.this, "category LapTop", Toast.LENGTH_SHORT).show();
-                            PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-                            items.add(popularDomain);
+                            ProductTypeDomain ProductTypeDomain = documentSnapshot.toObject(ProductTypeDomain.class);
+                            items.add(ProductTypeDomain);
                         }
 
                     }
                     // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-                    adapterPopular = new PopularAdapter(items);
-                    RecyclerView.setAdapter(adapterPopular);
+                    ProductTypeAdapter = new ProductTypeAdapter(items);
+                    RecyclerView.setAdapter(ProductTypeAdapter);
                     // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                    adapterPopular.notifyDataSetChanged();
+                    ProductTypeAdapter.notifyDataSetChanged();
 
                 } else {
                     // Xử lý lỗi khi task không thành công

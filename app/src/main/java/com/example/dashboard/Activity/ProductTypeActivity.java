@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dashboard.Adapter.PopularAdapter;
+import com.example.dashboard.Adapter.ProductTypeAdapter;
 import com.example.dashboard.Domain.PopularDomain;
+import com.example.dashboard.Domain.ProductTypeDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class ProductTypeActivity extends AppCompatActivity {
-    private RecyclerView.Adapter adapterPopular;
+    private ProductTypeAdapter ProductTypeAdapter;
     ScrollView ScrollView_producttype;
     LinearLayout view_producttype;
     RecyclerView recyclerview_producttype;
@@ -59,7 +61,7 @@ public class ProductTypeActivity extends AppCompatActivity {
         popRecyclerView_producttype(category);
     }
     private void popRecyclerView_producttype(String v) {
-        ArrayList<PopularDomain> items_producttype = new ArrayList<>();
+        ArrayList<ProductTypeDomain> items_producttype = new ArrayList<>();
         recyclerview_producttype.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -68,15 +70,15 @@ public class ProductTypeActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         if ( documentSnapshot.getData().get("category").equals(v)){
                             Toast.makeText(ProductTypeActivity.this, "category"+ v, Toast.LENGTH_SHORT).show();
-                            PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-                            items_producttype.add(popularDomain);
+                            ProductTypeDomain ProductTypeDomain = documentSnapshot.toObject(ProductTypeDomain.class);
+                            items_producttype.add(ProductTypeDomain);
                         }
                     }
                     // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-                    adapterPopular = new PopularAdapter(items_producttype);
-                    recyclerview_producttype.setAdapter(adapterPopular);
+                    ProductTypeAdapter = new ProductTypeAdapter(items_producttype);
+                    recyclerview_producttype.setAdapter(ProductTypeAdapter);
                     // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                    adapterPopular.notifyDataSetChanged();
+                    ProductTypeAdapter.notifyDataSetChanged();
 
                 } else {
                     // Xử lý lỗi khi task không thành công
