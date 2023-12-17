@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.example.dashboard.Adapter.PopularAdapter;
 import com.example.dashboard.Domain.PopularDomain;
@@ -25,48 +26,63 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class PhoneActivity extends AppCompatActivity {
+public class AllProductActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapterPopular;
-    ScrollView ScrollView_phone;
+    ScrollView ScrollView_allproduct;
     LinearLayout view_phone;
-    RecyclerView recyclerview_phone;
+    RecyclerView recyclerview_allproduct_laptop, recyclerview_allproduct_phone, recyclerview_allproduct_watch, recyclerview_allproduct_tivi;
     FirebaseFirestore fStore;
     ImageView backBtn;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_phone);
-//        fStore = FirebaseFirestore.getInstance();
-//        ScrollView_phone = findViewById(R.id.ScrollView_phone);
+        setContentView(R.layout.activity_all_product);
+        fStore = FirebaseFirestore.getInstance();
+        ScrollView_allproduct = findViewById(R.id.ScrollView_allproduct);
         view_phone = findViewById(R.id.view_phone);
-//        recyclerview_phone = findViewById(R.id.recyclerview_phone);
+        recyclerview_allproduct_laptop = findViewById(R.id.recyclerview_allproduct_laptop);
+        recyclerview_allproduct_phone = findViewById(R.id.recyclerview_allproduct_phone);
+        recyclerview_allproduct_watch = findViewById(R.id.recyclerview_allproduct_watch);
+        recyclerview_allproduct_tivi = findViewById(R.id.recyclerview_allproduct_tivi);
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PhoneActivity.this, MainActivity.class);
+                Intent intent = new Intent(AllProductActivity.this, MainActivity.class);
                 startActivity(intent);
 
             }
         });
-        popRecyclerView_Laptop("hehe");
-    }
-    private void popRecyclerView_Laptop(  String v) {
+        ArrayList<PopularDomain> items_laptop = new ArrayList<>();
         ArrayList<PopularDomain> items_phone = new ArrayList<>();
-        recyclerview_phone.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        ArrayList<PopularDomain> items_smartwatch = new ArrayList<>();
+        ArrayList<PopularDomain> items_tivi = new ArrayList<>();
+        popRecyclerView_AllProduct(recyclerview_allproduct_laptop,items_laptop,"LapTop");
+        popRecyclerView_AllProduct(recyclerview_allproduct_phone,items_phone,"Điện Thoại");
+        popRecyclerView_AllProduct(recyclerview_allproduct_watch,items_smartwatch,"Smart Watch");
+        popRecyclerView_AllProduct(recyclerview_allproduct_tivi,items_tivi,"Smart TV");
+
+    }
+
+    private void popRecyclerView_AllProduct( RecyclerView RecyclerView,  ArrayList<PopularDomain> items ,String v ) {
+        RecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        if ( documentSnapshot.getData().get("category").equals(v));
-                        PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-                        items_phone.add(popularDomain);
+                        if ( documentSnapshot.getData().get("category").equals(v)){
+//                            Toast.makeText(AllProductActivity.this, "category LapTop", Toast.LENGTH_SHORT).show();
+                            PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
+                            items.add(popularDomain);
+                        }
+
                     }
                     // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-                    adapterPopular = new PopularAdapter(items_phone);
-                    recyclerview_phone.setAdapter(adapterPopular);
+                    adapterPopular = new PopularAdapter(items);
+                    RecyclerView.setAdapter(adapterPopular);
                     // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
                     adapterPopular.notifyDataSetChanged();
 

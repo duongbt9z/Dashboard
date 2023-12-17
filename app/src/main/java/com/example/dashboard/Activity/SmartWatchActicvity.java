@@ -36,12 +36,12 @@ public class SmartWatchActicvity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_smart_watch_acticvity);
-        fStore = FirebaseFirestore.getInstance();
-        ScrollView_watch = findViewById(R.id.ScrollView_watch);
-        view_watch = findViewById(R.id.view_watch);
-        recyclerview_watch = findViewById(R.id.recyclerview_watch);
-        backBtn = findViewById(R.id.backBtn);
+//        setContentView(R.layout.activity_smart_watch_acticvity);
+//        fStore = FirebaseFirestore.getInstance();
+//        ScrollView_watch = findViewById(R.id.ScrollView_watch);
+//        view_watch = findViewById(R.id.view_watch);
+//        recyclerview_watch = findViewById(R.id.recyclerview_watch);
+//        backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

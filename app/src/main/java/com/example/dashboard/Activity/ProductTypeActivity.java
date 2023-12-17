@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dashboard.Adapter.PopularAdapter;
 import com.example.dashboard.Domain.PopularDomain;
@@ -24,45 +26,55 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class TiviActivity extends AppCompatActivity {
+public class ProductTypeActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapterPopular;
-    ScrollView ScrollView_tv;
-    LinearLayout view_tv;
-    RecyclerView recyclerview_tv;
+    ScrollView ScrollView_producttype;
+    LinearLayout view_producttype;
+    RecyclerView recyclerview_producttype;
     FirebaseFirestore fStore;
     ImageView backBtn;
+    TextView textView_producttype;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tivi);
+        setContentView(R.layout.activity_product_type);
         fStore = FirebaseFirestore.getInstance();
-        ScrollView_tv = findViewById(R.id.ScrollView_tv);
-        view_tv = findViewById(R.id.view_tv);
-        recyclerview_tv = findViewById(R.id.recyclerview_tv);
+        textView_producttype= findViewById(R.id.textView_producttype);
+        Intent intent = getIntent();
+        Bundle data =intent.getExtras();
+        String title = data.getString("Title_value");
+        String category = data.getString("category");
+        textView_producttype.setText(title);
+        view_producttype = findViewById(R.id.view_producttype);
+        ScrollView_producttype = findViewById(R.id.ScrollView_producttype);
+        recyclerview_producttype = findViewById(R.id.recyclerview_producttype);
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TiviActivity.this, MainActivity.class);
+                Intent intent = new Intent(ProductTypeActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
-        popRecyclerView_Laptop();
+        popRecyclerView_producttype(category);
     }
-    private void popRecyclerView_Laptop() {
-        ArrayList<PopularDomain> items_tivi = new ArrayList<>();
-        recyclerview_tv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        fStore.collection("PopularProducts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    private void popRecyclerView_producttype(String v) {
+        ArrayList<PopularDomain> items_producttype = new ArrayList<>();
+        recyclerview_producttype.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
-                        items_tivi.add(popularDomain);
+                        if ( documentSnapshot.getData().get("category").equals(v)){
+                            Toast.makeText(ProductTypeActivity.this, "category"+ v, Toast.LENGTH_SHORT).show();
+                            PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
+                            items_producttype.add(popularDomain);
+                        }
                     }
                     // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-                    adapterPopular = new PopularAdapter(items_tivi);
-                    recyclerview_tv.setAdapter(adapterPopular);
+                    adapterPopular = new PopularAdapter(items_producttype);
+                    recyclerview_producttype.setAdapter(adapterPopular);
                     // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
                     adapterPopular.notifyDataSetChanged();
 

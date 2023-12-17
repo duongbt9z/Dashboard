@@ -30,19 +30,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     //Popular RecyclerView
     private RecyclerView.Adapter adapterPopular;
-    private  RecyclerView recyclerViewPopular;
+    private RecyclerView recyclerViewPopular;
     FirebaseFirestore fStore;
     ViewFlipper viewFlipper;
 
 
     //add and update menu
-    TextView textView13,textView6;
-    LinearLayout  view_phone,view_watch,view_tv;
-    boolean btn=true;
+    TextView textView13, textView6;
+    boolean btn = true;
     boolean check_title_menu = true;
 
-    LinearLayout cat_phone,cat_laptop,cat_watch,cat_tv,cat_view_all,title_menu;
-
+    LinearLayout cat_phone, cat_laptop, cat_watch, cat_tv, cat_view_all, title_menu;
+    ProductTypeActivity recyclerview_producttype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewPopular = findViewById(R.id.view1);
         title_menu = findViewById(R.id.title_menu);
         textView6.setOnClickListener(view -> {
-            if(check_title_menu == true){
+            if (check_title_menu == true) {
                 title_menu.setVisibility(View.GONE);
                 check_title_menu = false;
-            }else {
+            } else {
                 title_menu.setVisibility(View.VISIBLE);
                 check_title_menu = true;
             }
@@ -73,37 +72,49 @@ public class MainActivity extends AppCompatActivity {
         textView13.setOnClickListener(view -> hide_appear());
         cat_laptop = findViewById(R.id.cat_laptop);
         cat_laptop.setOnClickListener((View v) -> {
-            Intent intent = new Intent(MainActivity.this,LaptopActivity.class);
-            startActivity(intent);
+            Event_intent_items("LapTop","LapTop");
         });
         cat_phone = findViewById(R.id.cat_phone);
         cat_phone.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this,PhoneActivity.class);
-            startActivity(intent);
+            Event_intent_items("Điện Thoại","Điện Thoại");
         });
         cat_watch = findViewById(R.id.cat_watch);
         cat_watch.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,SmartWatchActicvity.class);
-            startActivity(intent);
+            Event_intent_items("Smart Watch","Smart Watch");
         });
         cat_tv = findViewById(R.id.cat_tv);
         cat_tv.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,TiviActivity.class);
-            startActivity(intent);
+            Event_intent_items("Smart TV","Smart TV");
+        });
+        cat_view_all = findViewById(R.id.cat_view_all);
+        cat_view_all.setOnClickListener(view -> {
+           Intent intent = new Intent(MainActivity.this,AllProductActivity.class);
+           startActivity(intent);
         });
     }
+
+    public void Event_intent_items(String Title_value,String category){
+        Bundle data = new Bundle();
+        data.putString("Title_value",Title_value);
+        data.putString("category",category);
+        Intent intent = new Intent(MainActivity.this, ProductTypeActivity.class);
+        intent.putExtras(data);
+        startActivity(intent);
+    }
+
     // ẩn hiện danh mục menu
-    public void hide_appear(){
-        if(btn == true){
+    public void hide_appear() {
+        if (btn == true) {
             recyclerViewPopular.setVisibility(View.GONE);
             btn = false;
-        }else {
+        } else {
             recyclerViewPopular.setVisibility(View.VISIBLE);
             btn = true;
         }
     }
+
     //hàm tele đến vị trí của id scrollView2
-    public void smoothScrollTo(LinearLayout view){
+    public void smoothScrollTo(LinearLayout view) {
         // Cuộn đến vị trí đó
         ScrollView scrollView = findViewById(R.id.scrollView2);
         if (view != null) {
@@ -114,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private  void motionPictures(){
+
+    private void motionPictures() {
         viewFlipper = findViewById(R.id.viewFlipper);
 
         // Thiết lập chuyển đổi tự động giữa các view
@@ -160,13 +172,14 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
                                 items.add(popularDomain);
                             }
                             // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
                             adapterPopular = new PopularAdapter(items);
+
                             recyclerViewPopular.setAdapter(adapterPopular);
                             // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
                             adapterPopular.notifyDataSetChanged();
@@ -178,5 +191,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

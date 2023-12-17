@@ -36,11 +36,11 @@ public class LaptopActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_laptop);
-        fStore = FirebaseFirestore.getInstance();
-        ScrollView_laptop = findViewById(R.id.ScrollView_laptop);
-        view_Laptop = findViewById(R.id.view_Laptop);
-        recyclerview_laptop = findViewById(R.id.recyclerview_Laptop);
+//        setContentView(R.layout.activity_laptop);
+//        fStore = FirebaseFirestore.getInstance();
+//        ScrollView_laptop = findViewById(R.id.ScrollView_laptop);
+//        view_Laptop = findViewById(R.id.view_Laptop);
+//        recyclerview_laptop = findViewById(R.id.recyclerview_Laptop);
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

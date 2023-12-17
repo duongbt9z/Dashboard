@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.PhoneActivity">
+    tools:context=".Activity.ProductTypeActivity">
     <ScrollView
-        android:id="@+id/ScrollView_phone"
+        android:id="@+id/ScrollView_producttype"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/view_phone"
+                android:id="@+id/view_producttype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -26,37 +26,24 @@
                     android:padding="4dp"
                     android:src="@drawable/arrow" />
                 <TextView
-                    android:id="@+id/textView_phone"
+                    android:id="@+id/textView_producttype"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="24dp"
                     android:layout_weight="1"
                     android:text="Điện thoại"
-                    android:gravity="left|center"
+                    android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="19sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_phoneAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="20dp"
-                    android:text="Xem tất cả"
-                    android:gravity="left|center"
-                    android:textColor="@color/green"
-                    android:textSize="16.5sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_phone"
+                android:id="@+id/recyclerview_producttype"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"/>
-
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
