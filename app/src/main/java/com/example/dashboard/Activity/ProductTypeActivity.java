@@ -69,7 +69,6 @@ public class ProductTypeActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         if ( documentSnapshot.getData().get("category").equals(v)){
-                            Toast.makeText(ProductTypeActivity.this, "category"+ v, Toast.LENGTH_SHORT).show();
                             ProductTypeDomain ProductTypeDomain = documentSnapshot.toObject(ProductTypeDomain.class);
                             items_producttype.add(ProductTypeDomain);
                         }

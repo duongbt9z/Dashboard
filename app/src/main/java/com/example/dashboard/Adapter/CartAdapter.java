@@ -10,17 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.dashboard.Domain.CartDomain;
-import com.example.dashboard.Domain.PopularDomain;
-import com.example.dashboard.Helper.ChangeNumberItemsListener;
-import com.example.dashboard.Helper.ManagementCart;
 import com.example.dashboard.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -33,7 +24,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public CartAdapter(ArrayList<CartDomain> listItem, Context context) {
         this.listItem = listItem;
         this.context = context;
-//        managementCart = new ManagementCart(context);
     }
 
     @NonNull
@@ -61,7 +51,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.numberItem.setText(String.valueOf(listItem.get(position).getTotalQuanity()));
 
 //        Glide.with(holder.itemView.getContext())
-//                .load(listItem.get(position).getPicURL())
+//                .load(listItem.get(position).getPic())
 //                .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
 //                .into(holder.pic); //hiển thị trên ImageView tương ứng
     }

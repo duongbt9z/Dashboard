@@ -1,7 +1,6 @@
 package com.example.dashboard.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -14,9 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,34 +21,24 @@ import android.widget.Toast;
 import com.example.dashboard.Adapter.CartAdapter;
 import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.Domain.PopularDomain;
-import com.example.dashboard.Helper.ChangeNumberItemsListener;
+import com.example.dashboard.Adapter.EditProductAdapter;
 import com.example.dashboard.Helper.ManagementCart;
+import com.example.dashboard.Domain.ProductDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 
-//import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class CartActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
@@ -99,6 +86,7 @@ public class CartActivity extends AppCompatActivity {
 
                 if (position < listCart.size()) {
                     CartDomain deletedItem = listCart.get(position);
+                    String productID = listCart.get(position).getProductID();
 
                     // Xóa khỏi giỏ hàng
                     listCart.remove(position);
@@ -107,17 +95,16 @@ public class CartActivity extends AppCompatActivity {
 
                     // Xóa sản phẩm khỏi Firestore
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("AddToCart").document("User").collection(deletedItem.getProductName())
-                            .whereEqualTo("productName", deletedItem.getProductName()) //
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    FirebaseUser currentUser = fAuth.getCurrentUser();
+                    db.collection("AddToCart").document(currentUser.getUid())
+                            .collection("User").document(productID)
+                            .delete()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            db.collection("AddToCart").document("User").collection(deletedItem.getProductName()).document(document.getId()).delete();
-                                        }
-                                    } else {
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+
+                                    }else {
                                         Snackbar.make(recyclerView, "Lỗi! Không thể xóa " + deletedItem.getProductName() + " khỏi giỏ hàng", Snackbar.LENGTH_LONG).show();
                                     }
                                 }
@@ -128,28 +115,28 @@ public class CartActivity extends AppCompatActivity {
             }
         }
 
-//        @Override
-//        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1
-//                , float dX, float dY, int actionState, boolean isCurrentlyActive) {
-//
-//            new Builder(CartActivity.this, c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive)
-//                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(CartActivity.this, R.color.red))
-//                    .addSwipeLeftActionIcon(R.drawable.delete)
-//                    .create()
-//                    .decorate();
-//
-//            super.onChildDraw(c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive);
-//        }
-    };
 
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1
+                , float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(CartActivity.this, c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(CartActivity.this, R.color.red))
+                    .addSwipeLeftActionIcon(R.drawable.delete)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
 
     //Hàm tạo danh sách mặt hàng trong giỏ hàng và hiển thị
     private void initList() {
         // Tạo linear layout hướng dọc
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager); //set RecyclerView vào Linear Layout
         listCart = new ArrayList<>(); //Khởi tạo ArrayList cho CartActivity
-        cartAdapter = new CartAdapter(listCart, this); //tạo 1 adapter mới quản lý dữ liệu của arraylist
+        cartAdapter = new CartAdapter(listCart,this); //tạo 1 adapter mới quản lý dữ liệu của arraylist
         recyclerView.setAdapter(cartAdapter); //set adapter cho recyclerView
 
         //Lấy dữ liệu trong collection của user hiện tại
@@ -163,7 +150,11 @@ public class CartActivity extends AppCompatActivity {
                         listCart.clear(); //Xóa dữ liệu trong ArrayList hiện tại
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             //Duyệt qua tất cả đối tượng trong Collection và chuyển thành 1 cartDomain
+                            String documentID = document.getId();
+
                             CartDomain cartDomain = document.toObject(CartDomain.class);
+
+                            cartDomain.setProductID(documentID);
                             listCart.add(cartDomain); //Lưu dữ liệu vào Domain
                         }
                         cartAdapter.notifyDataSetChanged();
@@ -217,6 +208,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
 
+
     private void initView() {
         totalFeeTxt = findViewById(R.id.totalFeeTxt);
         deliveryTxt = findViewById(R.id.deliveryTxt);
@@ -231,5 +223,59 @@ public class CartActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
     }
 
+    public static class AdminEditProduct extends AppCompatActivity {
+        private RecyclerView.Adapter adapterEditProduct;
+        private RecyclerView recyclerViewEditProduct;
+        FirebaseFirestore fStore;
+        private ImageView backBtn;
 
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_admin_edit_product);
+
+            fStore = FirebaseFirestore.getInstance();
+
+            editRecyclerView();
+
+            backBtn = findViewById(R.id.backBtn);
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
+
+        private void editRecyclerView() {
+            ArrayList<ProductDomain> products = new ArrayList<>();
+
+
+            recyclerViewEditProduct = findViewById(R.id.productView);
+            recyclerViewEditProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+            fStore.collection("products")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    ProductDomain object = documentSnapshot.toObject(ProductDomain.class);
+                                    products.add(object);
+                                }
+                                // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
+                                adapterEditProduct = new EditProductAdapter(products);
+                                recyclerViewEditProduct.setAdapter(adapterEditProduct);
+                                // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
+                                adapterEditProduct.notifyDataSetChanged();
+
+                            } else {
+                                // Xử lý lỗi khi task không thành công
+                                Log.d("popRecyclerView", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
 }

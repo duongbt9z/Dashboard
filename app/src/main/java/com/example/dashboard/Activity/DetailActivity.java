@@ -1,10 +1,11 @@
 package com.example.dashboard.Activity;
 
+import com.example.dashboard.R;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,14 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.Domain.PopularDomain;
 import com.example.dashboard.Helper.ManagementCart;
-import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,13 +31,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class DetailActivity extends AppCompatActivity {
     private Button addToCartBtn, buyBtn;
-    private TextView titleTxt, priceTxt, scoreTxt, reviewTxt, descriptionTxt, txtQuanity, plusBtn, minusBtn;
+    private TextView titleTxt, priceTxt, scoreTxt, reviewTxt, descriptionTxt, txtQuanity, plusBtn, minusBtn, txtID;
     private ImageView itemPic, backBtn, wishListBtn;
     private PopularDomain objectPopular;
+
     private CartDomain objectCart;
     private int numberOrder = 0;
     private double totalPrice = 0;
@@ -50,8 +49,6 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        managementCart = new ManagementCart(this);
 
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
@@ -67,6 +64,7 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(pic)
                 .into(itemPic); //hiển thị trên ImageView tương ứng
+        txtID.setText(objectPopular.getId() + "");
         titleTxt.setText(objectPopular.getTitle());
         priceTxt.setText(objectPopular.getPrice() + " VNĐ");
         scoreTxt.setText(objectPopular.getScore() + "");
@@ -131,67 +129,74 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        String saveCurrentDate, saveCurrentTime;
+        double quanity = Double.parseDouble(txtQuanity.getText().toString());
 
-        Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
-        saveCurrentDate = currentDate.format(calForDate.getTime());
+        if(quanity == 0){
+            Toast.makeText(this, "Vui lòng nhập số lượng sản phẩm!", Toast.LENGTH_SHORT).show();
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentTime.format(calForDate.getTime());
+        } else {
+            String saveCurrentDate, saveCurrentTime;
 
-        FirebaseUser user = fAuth.getCurrentUser();
-        DocumentReference df = fStore.collection("AddToCart").document(user.getUid());
-        final HashMap<String, Object> cartMap = new HashMap<>();
+            Calendar calForDate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
+            saveCurrentDate = currentDate.format(calForDate.getTime());
 
-        cartMap.put("productName", titleTxt.getText().toString());
-        cartMap.put("productPrice", priceTxt.getText().toString());
-        cartMap.put("currentTime", saveCurrentTime);
-        cartMap.put("currentDate", saveCurrentDate);
-        cartMap.put("totalQuanity", txtQuanity.getText().toString());
-        cartMap.put("totalPrice", totalPrice);
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+            saveCurrentTime = currentTime.format(calForDate.getTime());
 
-        df.collection("User").whereEqualTo("productName", titleTxt.getText().toString())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (!task.getResult().isEmpty()) {
-                                // Kiểm tra sản phẩm đã tổn tại, tăng số lượng trong giỏ hàng.
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CartDomain cartDomain = document.toObject(CartDomain.class);
+            FirebaseUser user = fAuth.getCurrentUser();
+            DocumentReference df = fStore.collection("AddToCart").document(user.getUid());
+            final HashMap<String, Object> cartMap = new HashMap<>();
 
-                                    int quanity = Integer.parseInt(cartDomain.getTotalQuanity()); //Lấy số lượng sản phẩm hiện tại
-                                    int newQuanity = quanity + Integer.parseInt(txtQuanity.getText().toString()); //Tăng số lượng sản phẩm sau khi thêm
-                                    cartDomain.setTotalQuanity(String.valueOf(newQuanity)); //Cập nhật vào CartDomain
-                                    int price = Integer.parseInt(cartDomain.getProductPrice().replace(" VNĐ", "")); //Lấy giá tiền
-                                    totalPrice = price * newQuanity;
-                                    cartDomain.setTotalPrice(totalPrice); // Cập nhật totalPrice trong CartDomain
+            cartMap.put("productID", txtID.getText().toString());
+            cartMap.put("productName", titleTxt.getText().toString());
+            cartMap.put("productPrice", priceTxt.getText().toString());
+            cartMap.put("currentTime", saveCurrentTime);
+            cartMap.put("currentDate", saveCurrentDate);
+            cartMap.put("totalQuanity", txtQuanity.getText().toString());
+            cartMap.put("totalPrice", totalPrice);
 
-                                    //Tạo giỏ hàng rieeng cho user hiện tại
-                                    df.collection("User").document(document.getId()).set(cartDomain);
-                                    Toast.makeText(DetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            } else {
-                                // Nếu chưa tồn tại, thêm vào FireStore.
-                                df.collection("User").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+            df.collection("User").whereEqualTo("productName", titleTxt.getText().toString())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (!task.getResult().isEmpty()) {
+                                    // Kiểm tra sản phẩm đã tổn tại, tăng số lượng trong giỏ hàng.
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CartDomain cartDomain = document.toObject(CartDomain.class);
+
+                                        int quanity = Integer.parseInt(cartDomain.getTotalQuanity()); //Lấy số lượng sản phẩm hiện tại
+                                        int newQuanity = quanity + Integer.parseInt(txtQuanity.getText().toString()); //Tăng số lượng sản phẩm sau khi thêm
+                                        cartDomain.setTotalQuanity(String.valueOf(newQuanity)); //Cập nhật vào CartDomain
+                                        int price = Integer.parseInt(cartDomain.getProductPrice().replace(" VNĐ", "")); //Lấy giá tiền
+                                        totalPrice = price * newQuanity;
+                                        cartDomain.setTotalPrice(totalPrice); // Cập nhật totalPrice trong CartDomain
+
+                                        //Tạo giỏ hàng rieeng cho user hiện tại
+                                        df.collection("User").document(document.getId()).set(cartDomain);
                                         Toast.makeText(DetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
-                                });
+                                } else {
+                                    // Nếu chưa tồn tại, thêm vào FireStore.
+                                    df.collection("User").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            Toast.makeText(DetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    });
+                                }
+                            } else {
+                                Log.d("TAG", "Error getting documents: ", task.getException());
                             }
-                        } else {
-                            Log.d("TAG", "Error getting documents: ", task.getException());
                         }
-                    }
-                });
+                    });
+        }
+
     }
-
-
 
     private void initView() {
         addToCartBtn = findViewById(R.id.addToCartBtn);
@@ -207,6 +212,9 @@ public class DetailActivity extends AppCompatActivity {
         reviewTxt = findViewById(R.id.reviewTxt);
         descriptionTxt = findViewById(R.id.descriptionTxt);
         txtQuanity = findViewById(R.id.txtQuanity);
+        txtID = findViewById(R.id.txtID);
+
+        txtID.setVisibility(View.GONE);
 
         itemPic = findViewById(R.id.itemPic);
 

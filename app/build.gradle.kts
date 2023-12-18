@@ -55,5 +55,10 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
+    //Phương thức thanh toán RazorPay
+    implementation("com.razorpay:checkout:1.6.33")
+
+
+
 
 }

@@ -29,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/feedback">
 
                 <ImageView
                     android:layout_width="64dp"
@@ -109,6 +110,7 @@
             app:cardElevation="5dp">
 
             <LinearLayout
+                android:id="@+id/editProduct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -146,6 +148,7 @@
             app:cardElevation="5dp">
 
             <LinearLayout
+                android:id="@+id/deleteProduct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

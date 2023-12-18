@@ -2,7 +2,6 @@ package com.example.dashboard.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class Registration extends AppCompatActivity {
     EditText edtNameSignUp,edtEmailSignUp,edtPasswordSignUp,edtPasswordSignUpCF;

@@ -5,19 +5,28 @@ import java.io.Serializable;
 public class PopularDomain implements Serializable {
     private String title, description, picURL, price;
 
-    private int review, numberInCart;
+    private int review, numberInCart, id;
     private double score;
 
     public PopularDomain() {
     }
 
-    public PopularDomain(String title, String description, String picURL, int review, double score, String price) {
+    public PopularDomain(int id, String title, String description, String picURL, int review, double score, String price) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.picURL = picURL;
         this.review = review;
         this.score = score;
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

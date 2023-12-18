@@ -45,8 +45,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
         holder.feeTxt.setText(items.get(position).getPrice() + " VNĐ");
         holder.scoreTxt.setText("" + items.get(position).getScore());
         holder.reviewTxt.setText("" + items.get(position).getReview());
-
-
+        holder.idTxt.setText("" + items.get(position).getId());
 
         //dùng thư viện để load ảnh
         Glide.with(context)
@@ -69,8 +68,8 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
         return items.size();
     }
 
-    public static class Viewholder extends RecyclerView.ViewHolder{
-        TextView scoreTxt, titleTxtt, feeTxt, reviewTxt;
+    public class Viewholder extends RecyclerView.ViewHolder{
+        TextView scoreTxt, titleTxtt, feeTxt, reviewTxt, idTxt;
         ImageView pic;
         public Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -79,11 +78,11 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.Viewhold
             feeTxt = itemView.findViewById(R.id.feeTxt);
             scoreTxt = itemView.findViewById(R.id.scoreTxt);
             reviewTxt = itemView.findViewById(R.id.reviewTxt);
+            idTxt = itemView.findViewById(R.id.idTxt);
+
+            idTxt.setVisibility(View.GONE);
 
             pic = itemView.findViewById(R.id.pic);
         }
     }
-
-
-
 }

@@ -1,9 +1,5 @@
 package com.example.dashboard.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,25 +36,32 @@ import java.util.Map;
 
 public class AdminAddProduct extends AppCompatActivity {
 
-    Spinner Items;
-    ImageView backBtn;
-    EditText edtNameProduct, edtPrice, edtdescribe;
-    Button add, chooseFile;
-    ImageView imgProduct;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
-    // Firebase
-    FirebaseAuth auth;
-    FirebaseFirestore firestore;
-    FirebaseStorage storage;
-    StorageReference storageReference;
-    Uri selectedImageUri;
+    private Spinner Items;
+    private ImageView backBtn, imgProduct;
+    private EditText edtNameProduct, edtPrice, edtdescribe, edtProductId, edtScore, edtReview;
+    private Button add, chooseFile;
+
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_product);
+
         initView();
         addEvent();
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initView() {
@@ -67,26 +75,22 @@ public class AdminAddProduct extends AppCompatActivity {
         edtNameProduct = findViewById(R.id.edtNameProduct);
         edtPrice = findViewById(R.id.edtPrice);
         edtdescribe = findViewById(R.id.edtdescribe);
+        edtScore = findViewById(R.id.edtScore);
+        edtReview = findViewById(R.id.edtReview);
+        edtProductId = findViewById(R.id.edtProductId);
         add = findViewById(R.id.addPr);
         chooseFile = findViewById(R.id.chooseFile);
         imgProduct = findViewById(R.id.imgProduct);
+
+
     }
 
     private void addEvent() {
-        // Spinner
-        String[] danhMuc = new String[]{"LapTop", "Điện Thoại", "Smart Watch", "Smart TV"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, danhMuc);
+        String[] categories = new String[]{"LapTop", "Điện Thoại", "Smart Watch", "Smart TV"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         Items.setAdapter(adapter);
 
-        // Back button
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
-        // Choose file button
         chooseFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,28 +100,31 @@ public class AdminAddProduct extends AppCompatActivity {
             }
         });
 
-        // Add product button
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lấy thông tin từ các trường nhập liệu
                 String nameProduct = edtNameProduct.getText().toString().trim();
                 String price = edtPrice.getText().toString().trim();
                 String describe = edtdescribe.getText().toString().trim();
+                String productId = edtProductId.getText().toString().trim();
+                int review = Integer.parseInt(edtReview.getText().toString().trim());
+                double score = Double.parseDouble(edtScore.getText().toString().trim());
 
-                // Kiểm tra xem đã chọn ảnh từ Gallery chưa
+                if (nameProduct.isEmpty() || price.isEmpty() || describe.isEmpty() || productId.isEmpty() || review == 0 || score == 0) {
+                    Toast.makeText(AdminAddProduct.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (selectedImageUri == null) {
                     Toast.makeText(AdminAddProduct.this, "Vui lòng chọn ảnh sản phẩm", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Tải ảnh lên Firebase Storage và thêm thông tin vào Firestore
-                uploadImageToStorage(nameProduct, price, describe);
+                uploadImageToStorage(nameProduct, price, describe, productId, review, score);
             }
         });
     }
 
-    // Sự kiện sau khi chọn ảnh từ Gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -128,14 +135,12 @@ public class AdminAddProduct extends AppCompatActivity {
         }
     }
 
-    // Phương thức trợ giúp để lấy URI của ảnh
     private Uri getImageUri() {
         Drawable drawable = imgProduct.getDrawable();
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
 
-            // Lưu bitmap vào một tệp tạm thời và lấy URI
             String path = MediaStore.Images.Media.insertImage(
                     getContentResolver(),
                     bitmap,
@@ -147,9 +152,7 @@ public class AdminAddProduct extends AppCompatActivity {
         return null;
     }
 
-    // Tải ảnh lên Firebase Storage và thêm thông tin vào Firestore
-    private void uploadImageToStorage(String name, String price, String description) {
-        // Chuyển đổi ImageView thành mảng byte
+    private void uploadImageToStorage(String name, String price, String description, String productId, int review, double score) {
         imgProduct.setDrawingCacheEnabled(true);
         imgProduct.buildDrawingCache();
         Bitmap bitmap = ((BitmapDrawable) imgProduct.getDrawable()).getBitmap();
@@ -157,21 +160,17 @@ public class AdminAddProduct extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        // Đường dẫn lưu trữ trên Firebase Storage
         String imagePath = "product_images/" + System.currentTimeMillis() + ".jpg";
 
-        // Lưu trữ ảnh lên Firebase Storage
         StorageReference imageRef = storageReference.child(imagePath);
         imageRef.putBytes(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Lấy URL của ảnh từ Firebase Storage
                         imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri downloadUri) {
-                                // Thêm thông tin sản phẩm vào Firestore
-                                addProductToFirestore(name, price, description, downloadUri.toString());
+                                addProductToFirestore(name, price, description, downloadUri.toString(), productId, review, score);
                             }
                         });
                     }
@@ -179,37 +178,57 @@ public class AdminAddProduct extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Xử lý khi tải ảnh lên thất bại
                         Toast.makeText(AdminAddProduct.this, "Lỗi khi tải ảnh lên Firebase Storage", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    // Thêm thông tin sản phẩm vào Firestore
-    private void addProductToFirestore(String name, String price, String description, String imageUrl) {
-        // Tạo một Map để đại diện cho dữ liệu sản phẩm
+    private void addProductToFirestore(String name, String price, String description, String imageUrl, String productId, int review, double score) {
         Map<String, Object> productData = new HashMap<>();
         productData.put("name", name);
         productData.put("price", price);
         productData.put("description", description);
-        productData.put("imageUrl", imageUrl);
+        productData.put("picURL", imageUrl);
+        productData.put("category", Items.getSelectedItem().toString());
+        productData.put("id", productId);
+        productData.put("score", score);
+        productData.put("review", review);
 
-        // Thêm dữ liệu vào Firestore
+        checkDuplicateProductId(productId, productData);
+    }
+
+    private void checkDuplicateProductId(String productId, Map<String, Object> productData) {
+        firestore.collection("products")
+                .whereEqualTo("id", productId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            addProductToFirestore(productData);
+                        } else {
+                            Toast.makeText(AdminAddProduct.this, "ID đã tồn tại, vui lòng chọn ID khác", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(AdminAddProduct.this, "Lỗi khi kiểm tra trùng lặp ID", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void addProductToFirestore(Map<String, Object> productData) {
         firestore.collection("products")
                 .add(productData)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        // Xử lý khi thêm sản phẩm thành công
                         Toast.makeText(AdminAddProduct.this, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
-                        finish(); // Đóng activity sau khi thêm thành công
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Xử lý khi thêm vào Firestore thất bại
                         Toast.makeText(AdminAddProduct.this, "Lỗi khi thêm sản phẩm vào Firestore", Toast.LENGTH_SHORT).show();
+                        Log.e("Firestore", "Error adding product to Firestore", e);
                     }
                 });
     }

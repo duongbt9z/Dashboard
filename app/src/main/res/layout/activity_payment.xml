@@ -58,7 +58,6 @@
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/grey_background"
                 android:padding="16dp">
-
                 <TextView
                     android:id="@+id/textView33"
                     android:layout_width="wrap_content"
@@ -83,13 +82,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:singleLine="false"
                     android:text="TX. Thái Hòa, Nghệ An"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView16"
                     app:layout_constraintStart_toEndOf="@+id/imageView16"
                     app:layout_constraintTop_toTopOf="@+id/imageView16" />
 
                 <ImageView
-                    android:id="@+id/imageView17"
+                    android:id="@+id/chooseAddressBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/arrow_detail"

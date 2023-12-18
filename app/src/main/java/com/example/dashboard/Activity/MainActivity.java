@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.example.dashboard.Adapter.PopularAdapter;
@@ -30,18 +28,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     //Popular RecyclerView
     private RecyclerView.Adapter adapterPopular;
-    private RecyclerView recyclerViewPopular;
+    private  RecyclerView recyclerViewPopular;
     FirebaseFirestore fStore;
     ViewFlipper viewFlipper;
-
-
-    //add and update menu
-    TextView textView13, textView6;
-    boolean btn = true;
-    boolean check_title_menu = true;
-
-    LinearLayout cat_phone, cat_laptop, cat_watch, cat_tv, cat_view_all, title_menu;
-    ProductTypeActivity recyclerview_producttype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +42,12 @@ public class MainActivity extends AppCompatActivity {
         motionPictures();
         popRecyclerView();
         bottomNavigation();
+        onClick_evnt();
+    }
 
 
-        textView13 = findViewById(R.id.textView13);
-        textView6 = findViewById(R.id.textView6);
-        recyclerViewPopular = findViewById(R.id.view1);
-        title_menu = findViewById(R.id.title_menu);
-        textView6.setOnClickListener(view -> {
-            if (check_title_menu == true) {
-                title_menu.setVisibility(View.GONE);
-                check_title_menu = false;
-            } else {
-                title_menu.setVisibility(View.VISIBLE);
-                check_title_menu = true;
-            }
-            Log.d("hehe", "onCreate: duongfix");
-        });
-        textView13.setOnClickListener(view -> hide_appear());
+    private  void onClick_evnt(){
+        LinearLayout cat_phone, cat_laptop, cat_watch, cat_tv, cat_view_all, title_menu;
         cat_laptop = findViewById(R.id.cat_laptop);
         cat_laptop.setOnClickListener((View v) -> {
             Event_intent_items("LapTop","LapTop");
@@ -88,11 +66,10 @@ public class MainActivity extends AppCompatActivity {
         });
         cat_view_all = findViewById(R.id.cat_view_all);
         cat_view_all.setOnClickListener(view -> {
-           Intent intent = new Intent(MainActivity.this,AllProductActivity.class);
-           startActivity(intent);
+            Intent intent = new Intent(MainActivity.this,AllProductActivity.class);
+            startActivity(intent);
         });
     }
-
     public void Event_intent_items(String Title_value,String category){
         Bundle data = new Bundle();
         data.putString("Title_value",Title_value);
@@ -101,32 +78,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtras(data);
         startActivity(intent);
     }
-
-    // ẩn hiện danh mục menu
-    public void hide_appear() {
-        if (btn == true) {
-            recyclerViewPopular.setVisibility(View.GONE);
-            btn = false;
-        } else {
-            recyclerViewPopular.setVisibility(View.VISIBLE);
-            btn = true;
-        }
-    }
-
-    //hàm tele đến vị trí của id scrollView2
-    public void smoothScrollTo(LinearLayout view) {
-        // Cuộn đến vị trí đó
-        ScrollView scrollView = findViewById(R.id.scrollView2);
-        if (view != null) {
-            Log.e("TAG", "flag1 is yepp");
-            scrollView.smoothScrollTo(0, view.getTop());
-        } else {
-            Log.e("TAG", "flag1 is null");
-        }
-
-    }
-
-    private void motionPictures() {
+    private  void motionPictures(){
         viewFlipper = findViewById(R.id.viewFlipper);
 
         // Thiết lập chuyển đổi tự động giữa các view
@@ -172,14 +124,13 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()){
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 PopularDomain popularDomain = documentSnapshot.toObject(PopularDomain.class);
                                 items.add(popularDomain);
                             }
                             // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
                             adapterPopular = new PopularAdapter(items);
-
                             recyclerViewPopular.setAdapter(adapterPopular);
                             // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
                             adapterPopular.notifyDataSetChanged();
@@ -191,4 +142,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

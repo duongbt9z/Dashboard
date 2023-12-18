@@ -23,15 +23,28 @@
         <activity
             android:name=".Activity.ProductTypeActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".Activity.DeleteProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AddAdressActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Activity.ListUser" -->
+        <!-- android:exported="false" /> -->
+        <activity
+            android:name=".Activity.AddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AdminEditProduct"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Activity.FeedBack" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".Activity.AdminAddProduct"
             android:exported="false" />
         <activity
             android:name=".Activity.Admin"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".Activity.AdminViewActivity" -->
-        <!-- android:exported="false" /> -->
+            android:exported="false" />
         <activity
             android:name=".Activity.PaymentActivity"
             android:exported="false" />
@@ -59,6 +72,10 @@
         <activity
             android:name=".Activity.Intro"
             android:exported="true" />
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_nIiw7flc034F8p" />
     </application>
 
 </manifest>

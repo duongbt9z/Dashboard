@@ -1,6 +1,8 @@
 package com.example.dashboard.Domain;
 
 public class CartDomain {
+    String productID;
+    String pic;
     String productName;
     String productPrice;
     String totalQuanity;
@@ -9,13 +11,31 @@ public class CartDomain {
 
     public CartDomain() {
     }
-    public CartDomain(String productName, String productPrice, String totalQuanity, String currentTime, String currentDate, double totalPrice) {
+    public CartDomain(String productID, String pic, String productName, String productPrice, String totalQuanity, String currentTime, String currentDate,double totalPrice) {
+        this.productID = productID;
+        this.pic = pic;
         this.productName = productName;
         this.productPrice = productPrice;
         this.totalQuanity = totalQuanity;
         this.currentTime = currentTime;
         this.currentDate = currentDate;
         this.totalPrice = totalPrice;
+    }
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public String getProductName() {

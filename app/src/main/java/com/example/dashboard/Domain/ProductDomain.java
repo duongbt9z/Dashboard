@@ -1,28 +1,27 @@
 package com.example.dashboard.Domain;
 
-import java.util.List;
-
 public class ProductDomain {
     private String id;
     private String name;
     private String category;
-    private float price;
-    private Float offerPercentage;
+    private String price;
     private String description;
-    private List<Integer> colors;
-    private List<String> sizes;
-    private List<String> images;
+    private String picURL;
+    private int review;
+    private double score;
 
-    public ProductDomain(String id, String name, String category, float price, Float offerPercentage, String description, List<Integer> colors, List<String> sizes, List<String> images) {
+    public ProductDomain() {
+    }
+
+    public ProductDomain(String id, String name, String category, String price, String description, String picURL, int review, double score) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
-        this.offerPercentage = offerPercentage;
         this.description = description;
-        this.colors = colors;
-        this.sizes = sizes;
-        this.images = images;
+        this.picURL = picURL;
+        this.review = review;
+        this.score = score;
     }
 
     public String getId() {
@@ -49,20 +48,12 @@ public class ProductDomain {
         this.category = category;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
-    }
-
-    public Float getOfferPercentage() {
-        return offerPercentage;
-    }
-
-    public void setOfferPercentage(Float offerPercentage) {
-        this.offerPercentage = offerPercentage;
     }
 
     public String getDescription() {
@@ -73,28 +64,28 @@ public class ProductDomain {
         this.description = description;
     }
 
-    public List<Integer> getColors() {
-        return colors;
+    public String getPicURL() {
+        return picURL;
     }
 
-    public void setColors(List<Integer> colors) {
-        this.colors = colors;
+    public void setPicURL(String picURL) {
+        this.picURL = picURL;
     }
 
-    public List<String> getSizes() {
-        return sizes;
+    public int getReview() {
+        return review;
     }
 
-    public void setSizes(List<String> sizes) {
-        this.sizes = sizes;
+    public void setReview(int review) {
+        this.review = review;
     }
 
-    public List<String> getImages() {
-        return images;
+    public double getScore() {
+        return score;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setScore(double score) {
+        this.score = score;
     }
 }
 

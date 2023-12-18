@@ -59,8 +59,6 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
                 Intent intent = new Intent(holder.itemView.getContext(), TypedetailActivity.class);
                 intent.putExtra("items_type", items_type.get(position));
                 holder.itemView.getContext().startActivity(intent);
-
-                Toast.makeText(context, "sk onclick iemt", Toast.LENGTH_SHORT).show();
             }
         });
 

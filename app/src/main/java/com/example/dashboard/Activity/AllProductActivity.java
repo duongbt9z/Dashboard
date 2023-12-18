@@ -76,7 +76,6 @@ public class AllProductActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         if ( documentSnapshot.getData().get("category").equals(v)){
-//                            Toast.makeText(AllProductActivity.this, "category LapTop", Toast.LENGTH_SHORT).show();
                             ProductTypeDomain ProductTypeDomain = documentSnapshot.toObject(ProductTypeDomain.class);
                             items.add(ProductTypeDomain);
                         }
