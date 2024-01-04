@@ -1,6 +1,8 @@
 package com.example.dashboard.Domain;
 
-public class ProductDomain {
+import java.io.Serializable;
+
+public class ProductDomain implements Serializable {
     private String id;
     private String name;
     private String category;

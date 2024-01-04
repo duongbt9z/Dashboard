@@ -54,13 +54,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.Viewhold
                 String address = listAddress.get(position).getUserAddress();
                 selectedAddress.setAddress(address);
 
-                // Tạo một Intent để chuyển đến PaymentActivity
+                // Khởi tạo Intent để mở PaymentActivity
                 Intent intent = new Intent(context, PaymentActivity.class);
-                // Thêm cờ FLAG_ACTIVITY_NEW_TASK
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                // Đặt địa chỉ được chọn làm dữ liệu bổ sung cho Intent
+                // Đặt địa chỉ đã chọn làm dữ liệu extra của Intent
                 intent.putExtra("selectedAddress", address);
-                // Bắt đầu PaymentActivity
+                // Thêm cờ FLAG_ACTIVITY_NEW_TASK vào Intent
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // Mở PaymentActivity
                 context.startActivity(intent);
             }
         });

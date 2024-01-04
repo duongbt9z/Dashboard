@@ -30,17 +30,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/wishListBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/wishlist"
-                    app:layout_constraintBottom_toBottomOf="@+id/backBtn"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/backBtn" />
-
-
 
                 <View
                     android:id="@+id/view2"
@@ -103,6 +92,7 @@
                     android:id="@+id/txtID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:text="ID"
                     android:textSize="18sp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -133,7 +123,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView20"
+                    android:id="@+id/imgCMT"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"

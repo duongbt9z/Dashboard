@@ -95,8 +95,16 @@
                         android:textColor="@color/black"
                         android:textSize="22sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/txtID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ID"
+                    android:visibility="gone"
+                    android:textSize="18sp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,7 +133,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView20"
+                    android:id="@+id/imgCMT"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"

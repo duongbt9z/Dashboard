@@ -1,10 +1,5 @@
 package com.example.dashboard.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +8,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
-import com.example.dashboard.Adapter.PopularAdapter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.dashboard.Adapter.ProductTypeAdapter;
-import com.example.dashboard.Domain.PopularDomain;
 import com.example.dashboard.Domain.ProductTypeDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -69,7 +67,7 @@ public class AllProductActivity extends AppCompatActivity {
     }
 
     private void popRecyclerView_AllProduct( RecyclerView RecyclerView,  ArrayList<ProductTypeDomain> items ,String v ) {
-        RecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        RecyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // Số cột là 2
         fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

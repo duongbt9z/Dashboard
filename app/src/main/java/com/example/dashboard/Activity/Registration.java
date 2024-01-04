@@ -57,15 +57,18 @@ public class Registration extends AppCompatActivity {
                 String passWord = edtPasswordSignUp.getText().toString().trim();
                 String passWordCF = edtPasswordSignUpCF.getText().toString().trim();
                 if(name.length() <= 0||email.length() <= 0||passWord.length() <= 0||passWordCF.length() <= 0){
-                    Toast.makeText(Registration.this, "Vui Lòng Nhập Đầy Đủ Thông Tin!", Toast.LENGTH_SHORT).show();
+                    edtNameSignUp.setError("Không được để trống!");
+                    edtEmailSignUp.setError("Không được để trống!");
+                    edtPasswordSignUp.setError("Không được để trống!");
+                    edtPasswordSignUpCF.setError("Không được để trống!");
                 }else{
                     if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                        Toast.makeText(Registration.this, "Vui lòng nhập đúng định dạng email", Toast.LENGTH_SHORT).show();
+                        edtEmailSignUp.setError("Vui lòng nhập đúng định dạng email!");
                     }
                     if(passWord.length() < 6 &&passWordCF.length() < 6){
-                        Toast.makeText(Registration.this, "Mật Khẩu có ít nhất 7 ký tự", Toast.LENGTH_SHORT).show();
+                        edtPasswordSignUp.setError("Mật Khẩu có ít nhất 7 ký tự\"!");
                     }else if(passWord.equals(passWordCF)==false){
-                        Toast.makeText(Registration.this, "Mật Khẩu không khớp", Toast.LENGTH_SHORT).show();
+                        edtPasswordSignUpCF.setError("Mật Khẩu không khớp!");
                     }else {
                         // kiểm tra xem email đã được dùng hay chưa
                         auth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -85,17 +88,7 @@ public class Registration extends AppCompatActivity {
                                                 userInfo.put("name", edtNameSignUp.getText().toString());
                                                 userInfo.put("email", edtEmailSignUp.getText().toString());
                                                 userInfo.put("password", edtPasswordSignUp.getText().toString());
-                                                df.set(userInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Toast.makeText(Registration.this, "Bố m được lưu rồi", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(Registration.this, "Vẫn đ được", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
+                                                df.set(userInfo);
                                                 Toast.makeText(Registration.this, "Đăng Ký Thành Công!", Toast.LENGTH_SHORT).show();
                                                 startActivity(new Intent(Registration.this,Login.class));
                                             }

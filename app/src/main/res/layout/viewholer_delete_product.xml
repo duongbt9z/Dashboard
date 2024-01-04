@@ -10,6 +10,7 @@
         android:id="@+id/lin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_margin="16dp"
         android:background="@drawable/grey_background"
         android:orientation="horizontal"

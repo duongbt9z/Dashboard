@@ -121,6 +121,7 @@ public class AdminAddProduct extends AppCompatActivity {
                 }
 
                 uploadImageToStorage(nameProduct, price, describe, productId, review, score);
+                finish();
             }
         });
     }

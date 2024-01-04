@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.R;
 
@@ -50,10 +52,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         holder.numberItem.setText(String.valueOf(listItem.get(position).getTotalQuanity()));
 
-//        Glide.with(holder.itemView.getContext())
-//                .load(listItem.get(position).getPic())
-//                .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
-//                .into(holder.pic); //hiển thị trên ImageView tương ứng
+        Glide.with(holder.itemView.getContext())
+                .load(listItem.get(position).getPic())
+                .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
+                .into(holder.pic); //hiển thị trên ImageView tương ứng
     }
 
 

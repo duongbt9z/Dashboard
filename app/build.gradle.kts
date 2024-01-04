@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.dashboard"
-        minSdk = 34
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -28,6 +28,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+
 }
 
 
@@ -58,6 +60,8 @@ dependencies {
     //Phương thức thanh toán RazorPay
     implementation("com.razorpay:checkout:1.6.33")
 
+
+//    implementation("com.paypal.checkout:android-sdk:1.2.0")
 
 
 

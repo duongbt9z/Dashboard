@@ -1,10 +1,5 @@
 package com.example.dashboard.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dashboard.Adapter.PopularAdapter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.dashboard.Adapter.ProductTypeAdapter;
-import com.example.dashboard.Domain.PopularDomain;
 import com.example.dashboard.Domain.ProductTypeDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,11 +40,14 @@ public class ProductTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_type);
         fStore = FirebaseFirestore.getInstance();
         textView_producttype= findViewById(R.id.textView_producttype);
+
         Intent intent = getIntent();
         Bundle data =intent.getExtras();
         String title = data.getString("Title_value");
         String category = data.getString("category");
+
         textView_producttype.setText(title);
+
         view_producttype = findViewById(R.id.view_producttype);
         ScrollView_producttype = findViewById(R.id.ScrollView_producttype);
         recyclerview_producttype = findViewById(R.id.recyclerview_producttype);
@@ -62,7 +63,7 @@ public class ProductTypeActivity extends AppCompatActivity {
     }
     private void popRecyclerView_producttype(String v) {
         ArrayList<ProductTypeDomain> items_producttype = new ArrayList<>();
-        recyclerview_producttype.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerview_producttype.setLayoutManager(new GridLayoutManager(this, 2)); // Số cột là 2
         fStore.collection("products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="400dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -31,13 +31,12 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAdmin"
         style="@style/txtBold"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/rounded_item"
-        android:drawableBottom="@drawable/arrow_goto"
+        android:drawableBottom="@drawable/admin"
         android:padding="10dp"
-        android:text="Admin"
         android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />

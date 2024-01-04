@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".Activity.Registration"
     android:background="#E1F2FBEF">
 
     <ImageView
@@ -63,19 +64,31 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtName_SignUp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutUser"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/user"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="Họ Tên"
-            android:inputType="textPersonName"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:textColor="@color/green"
-            android:textSize="18sp" />
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtName_SignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/user"
+                android:textColor="@color/green"
+                android:inputType="text"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/txtEmail3"
@@ -88,20 +101,30 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtEmail_SignUp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/email"
-            android:ems="10"
-            android:hint="example@gmail.com"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:text=""
-            android:textColor="@color/green"
-            android:textSize="18sp" />
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEmail_SignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/email"
+                android:textColor="@color/green"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/txtPassword_SignUp"
@@ -114,20 +137,30 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtPassword_SignUp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/password"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="Mật Khẩu"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:text=""
-            android:textColor="@color/green"
-            android:textSize="18sp" />
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword_SignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/password"
+                android:textColor="@color/green"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/txtPassword"
@@ -140,25 +173,36 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtPassword_SignUpCF"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutCFPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/password"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="Xác Nhận Mật Khẩu"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:textColor="@color/green"
-            android:textSize="18sp" />
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword_SignUpCF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/password"
+                android:textColor="@color/green"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="26dp"
             android:background="@drawable/green_btn3"
             android:text="Đăng Ký"
             android:textColor="#ffffff"

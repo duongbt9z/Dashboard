@@ -1,6 +1,7 @@
 package com.example.dashboard.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.example.dashboard.Activity.AdminEditProduct;
+import com.example.dashboard.Activity.DetailActivity;
+import com.example.dashboard.Activity.EditActivity;
 import com.example.dashboard.Domain.ProductDomain;
 import com.example.dashboard.R;
 
@@ -49,6 +53,14 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                 .transform(new GranularRoundedCorners(30, 30, 0, 0)) //bo tròn góc ảnh
                 .into(holder.imageProduct); //hiển thị trên ImageView tương ứng
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.itemView.getContext(), EditActivity.class);
+                intent.putExtra("object", products.get(position));
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
 
     }
 

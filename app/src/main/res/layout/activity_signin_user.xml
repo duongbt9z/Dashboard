@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E1F2FBEF">
+    android:background="#E1F2FBEF"
+    tools:context=".Activity.Login">
 
     <ImageView
         android:id="@+id/imageView5"
@@ -32,7 +33,7 @@
         android:id="@+id/imageView6"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,56 +49,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6">
 
-        <TextView
-            android:id="@+id/txtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Email"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/edtEmailLogin"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/email"
-            android:ems="10"
-            android:hint="example@gmail.com"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:text=""
-            android:textColor="@color/green"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txtPassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="8dp"
-            android:text="Mật Khẩu"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:hint="Email"
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
 
-        <EditText
-            android:id="@+id/edtPasswordLogin"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEmailLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/email"
+                android:textColor="@color/green"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg_loginuser"
-            android:drawableStart="@drawable/password"
-            android:ems="10"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:hint="Mật Khẩu"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            android:textColor="@color/green"
-            android:textSize="18sp" />
+            android:textColorHint="@color/green"
+            app:boxStrokeColor="@color/green"
+            app:boxStrokeErrorColor="@color/red"
+            app:boxStrokeWidth="2.5dp"
+            app:shapeAppearanceOverlay="@style/roundedEdges">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPasswordLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/password"
+                android:textColor="@color/green"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,11 +109,40 @@
             android:gravity="right">
 
             <TextView
-                android:id="@+id/txt"
+                android:id="@+id/txtForgetPass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="right"
+                android:padding="8dp"
+                android:text="Quên Mật Khẩu"
+                android:textColor="@color/green"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/green_btn3"
+            android:text="Đăng Nhập"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
                 android:padding="8dp"
                 android:text="Bạn chưa có tài khoản?"
                 android:textColor="@color/black"
@@ -127,17 +159,6 @@
                 android:textColor="@color/green"
                 android:textSize="15sp"/>
         </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/green_btn3"
-            android:text="Đăng Nhập"
-            android:textColor="#ffffff"
-            android:textSize="20dp"
-            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

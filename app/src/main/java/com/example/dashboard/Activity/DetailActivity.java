@@ -1,15 +1,23 @@
 package com.example.dashboard.Activity;
 
+import com.example.dashboard.Adapter.FeedbackAdapter;
+import com.example.dashboard.Domain.FeedbackDomain;
 import com.example.dashboard.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,33 +25,39 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.Domain.PopularDomain;
-import com.example.dashboard.Helper.ManagementCart;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity {
     private Button addToCartBtn, buyBtn;
     private TextView titleTxt, priceTxt, scoreTxt, reviewTxt, descriptionTxt, txtQuanity, plusBtn, minusBtn, txtID;
-    private ImageView itemPic, backBtn, wishListBtn;
+    private ImageView itemPic, backBtn,imgCMT;
     private PopularDomain objectPopular;
 
-    private CartDomain objectCart;
+    private ArrayList<FeedbackDomain> listFeedback = new ArrayList<>();
     private int numberOrder = 0;
     private double totalPrice = 0;
-    private ManagementCart managementCart;
+
     private FirebaseFirestore fStore;
     private FirebaseAuth fAuth;
+    String picURL;
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +66,6 @@ public class DetailActivity extends AppCompatActivity {
 
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
-
         initView();
         getPopularObject();
     }
@@ -61,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
         objectPopular = (PopularDomain) getIntent().getSerializableExtra("object"); // lấy PopularDomain từ Intent thông qua object
         //Dùng thư viện glide để load ảnh
         String pic = objectPopular.getPicURL();
+        picURL = objectPopular.getPicURL();
         Glide.with(this)
                 .load(pic)
                 .into(itemPic); //hiển thị trên ImageView tương ứng
@@ -83,8 +97,14 @@ public class DetailActivity extends AppCompatActivity {
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                objectPopular.setNumberInCart(numberOrder); //set số lượng đơn hàng trong giỏi
-                startActivity(new Intent(DetailActivity.this, PaymentActivity.class));
+                double quanity = Double.parseDouble(txtQuanity.getText().toString());
+
+                if(quanity == 0){
+                    Toast.makeText(DetailActivity.this, "Vui lòng nhập số lượng sản phẩm!", Toast.LENGTH_SHORT).show();
+                } else {
+                    addToCart();
+                    startActivity(new Intent(DetailActivity.this, PaymentActivity.class));
+                }
             }
         });
 
@@ -115,17 +135,14 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //nút back
-        backBtn.setOnClickListener(v -> finish());
-
-        //nút wishlist
-        wishListBtn.setOnClickListener(new View.OnClickListener() {
+        imgCMT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wishListBtn.setImageResource(R.drawable.wishlist2);
+                showComment();
             }
         });
+        //nút back
+        backBtn.setOnClickListener(v -> finish());
     }
 
     private void addToCart() {
@@ -155,6 +172,7 @@ public class DetailActivity extends AppCompatActivity {
             cartMap.put("currentDate", saveCurrentDate);
             cartMap.put("totalQuanity", txtQuanity.getText().toString());
             cartMap.put("totalPrice", totalPrice);
+            cartMap.put("pic", picURL);
 
             df.collection("User").whereEqualTo("productName", titleTxt.getText().toString())
                     .get()
@@ -201,11 +219,10 @@ public class DetailActivity extends AppCompatActivity {
     private void initView() {
         addToCartBtn = findViewById(R.id.addToCartBtn);
         buyBtn = findViewById(R.id.buyBtn);
-        wishListBtn = findViewById(R.id.wishListBtn);
         plusBtn = findViewById(R.id.plusBtn);
         minusBtn = findViewById(R.id.minusBtn);
         backBtn = findViewById(R.id.backBtn);
-
+        imgCMT = findViewById(R.id.imgCMT);
         titleTxt = findViewById(R.id.titleTxt);
         priceTxt = findViewById(R.id.priceTxt);
         scoreTxt = findViewById(R.id.scoreTxt);
@@ -217,6 +234,59 @@ public class DetailActivity extends AppCompatActivity {
         txtID.setVisibility(View.GONE);
 
         itemPic = findViewById(R.id.itemPic);
+    }
+    private void showComment(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.activity_feedback);
+        dialog.setCanceledOnTouchOutside(true);
+        EditText nameFeedbackTxt = dialog.findViewById(R.id.nameFeedbackTxt);
+        EditText editTextFeedback = dialog.findViewById(R.id.editTextFeedback);
+        Button btnFeedback = dialog.findViewById(R.id.btnFeedback);
+        // Khởi tạo RecyclerView và Adapter
+        RecyclerView feedbackListView = dialog.findViewById(R.id.feedBackView);
+        feedbackListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        FeedbackAdapter feedbackAdapter = new FeedbackAdapter(listFeedback, this);
+        feedbackListView.setAdapter(feedbackAdapter);
+        name = objectPopular.getTitle();
+        picURL = objectPopular.getPicURL();
 
+        btnFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nickName = nameFeedbackTxt.getText().toString().trim();
+                String feedback = editTextFeedback.getText().toString().trim();
+                if (!TextUtils.isEmpty(nickName)&&!TextUtils.isEmpty(feedback)){
+                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                    CollectionReference feedbackCollection = firestore.collection("Feedbacks");
+                    Map<String,Object> feedbackData = new HashMap<>();
+                    feedbackData.put("nickname",nickName);
+                    feedbackData.put("feedback",feedback);
+                    feedbackData.put("name",name);
+                    feedbackData.put("pic",picURL);
+                    feedbackCollection.add(feedbackData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(DetailActivity.this, "Phản hồi đã được gửi thành công!Cảm ơn bạn đã phản hồi", Toast.LENGTH_SHORT).show();
+                            nameFeedbackTxt.setText("");
+                            editTextFeedback.setText("");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(DetailActivity.this, "Lỗi gửi phản hồi,vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    // Hiển thị thông báo nếu người dùng không nhập đủ dữ liệu
+                    Toast.makeText(getApplicationContext(), "Vui lòng nhập tên và phản hồi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;; // Adjust the fraction as needed
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.show();
     }
 }

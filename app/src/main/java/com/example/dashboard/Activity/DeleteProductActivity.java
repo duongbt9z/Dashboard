@@ -12,18 +12,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.dashboard.Adapter.CartAdapter;
 import com.example.dashboard.Adapter.DeleteProductAdapter;
-import com.example.dashboard.Adapter.EditProductAdapter;
-import com.example.dashboard.Domain.CartDomain;
 import com.example.dashboard.Domain.ProductDomain;
 import com.example.dashboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,22 +30,22 @@ import java.util.ArrayList;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class DeleteProductActivity extends AppCompatActivity {
-    private RecyclerView.Adapter adapterEditProduct;
     private RecyclerView recyclerViewDeleteProduct;
     private DeleteProductAdapter deleteProductAdapter;
-    ArrayList<ProductDomain> listProdcut = new ArrayList<>();
-    FirebaseFirestore fStore;
-    private FirebaseAuth fAuth;
+    private ArrayList<ProductDomain> listProduct = new ArrayList<>();
+    private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
     private ImageView backBtn;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_product);
 
-        fStore = FirebaseFirestore.getInstance();
-        fAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        deleteRecyclerView();
+        setupRecyclerView();
 
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,10 +55,12 @@ public class DeleteProductActivity extends AppCompatActivity {
             }
         });
 
+        // Thiết lập ItemTouchHelper để thực hiện chức năng vuốt để xóa
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewDeleteProduct);
     }
 
+    // Callback cho chức năng vuốt để xóa
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -72,26 +71,26 @@ public class DeleteProductActivity extends AppCompatActivity {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
             if (direction == ItemTouchHelper.LEFT) {
-
-                if (position < listProdcut.size()) {
-                    // Lưu lại sản phẩm và ID trước khi xóa
-                    ProductDomain deletedItem = listProdcut.get(position);
+                if (position < listProduct.size()) {
+                    ProductDomain deletedItem = listProduct.get(position);
                     String id = deletedItem.getId();
 
-                    // Xóa sản phẩm khỏi Firestore
+                    // Xóa sản phẩm từ Firestore
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
                     db.collection("products").document(id)
                             .delete()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        // Xóa khỏi giỏ hàng sau khi xóa thành công từ Firestore
-                                        listProdcut.remove(position);
-                                        deleteProductAdapter.notifyItemRemoved(position); // Thông báo xoá item
+                                    if (task.isSuccessful()) {
+                                        // Cập nhật dataset local và thông báo cho adapter
+                                        listProduct.remove(position);
+                                        deleteProductAdapter.notifyItemRemoved(position);
+
+                                        // Hiển thị thông báo Snackbar
                                         Snackbar.make(recyclerViewDeleteProduct, "Đã xóa " + deletedItem.getName() + " khỏi giỏ hàng", Snackbar.LENGTH_LONG).show();
-                                    }else {
+                                    } else {
+                                        // Hiển thị thông báo lỗi nếu quá trình xóa thất bại
                                         Snackbar.make(recyclerViewDeleteProduct, "Lỗi! Không thể xóa " + deletedItem.getName() + " khỏi giỏ hàng", Snackbar.LENGTH_LONG).show();
                                     }
                                 }
@@ -100,13 +99,10 @@ public class DeleteProductActivity extends AppCompatActivity {
             }
         }
 
-
-
-
         @Override
-        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1
-                , float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder1,
+                                float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            // Tùy chỉnh hành vi vuốt
             new RecyclerViewSwipeDecorator.Builder(DeleteProductActivity.this, c, recyclerView1, viewHolder1, dX, dY, actionState, isCurrentlyActive)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(DeleteProductActivity.this, R.color.red))
                     .addSwipeLeftActionIcon(R.drawable.delete)
@@ -117,34 +113,36 @@ public class DeleteProductActivity extends AppCompatActivity {
         }
     };
 
-    private void deleteRecyclerView() {
-        ArrayList<ProductDomain> products = new ArrayList<>();
-
+    private void setupRecyclerView() {
         recyclerViewDeleteProduct = findViewById(R.id.productView);
         recyclerViewDeleteProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        fStore.collection("products")
+        firestore.collection("products")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                ProductDomain object = documentSnapshot.toObject(ProductDomain.class);
-                                products.add(object);
-                            }
-                            // Khởi tạo adapter sau khi đã thêm dữ liệu vào items
-                            deleteProductAdapter = new DeleteProductAdapter(products, DeleteProductActivity.this);
-                            recyclerViewDeleteProduct.setAdapter(deleteProductAdapter);
-                            // Cập nhật giao diện sau khi đã thêm tất cả các phần tử vào items
-                            deleteProductAdapter.notifyDataSetChanged();
+                                String documentID = documentSnapshot.getId();
 
+                                ProductDomain object = documentSnapshot.toObject(ProductDomain.class);
+
+                                object.setId(documentID);
+                                listProduct.add(object);
+                            }
+
+                            // Khởi tạo adapter sau khi thêm dữ liệu vào danh sách
+                            deleteProductAdapter = new DeleteProductAdapter(listProduct, DeleteProductActivity.this);
+                            recyclerViewDeleteProduct.setAdapter(deleteProductAdapter);
+
+                            // Thông báo cho adapter sau khi thêm tất cả các phần tử vào danh sách
+                            deleteProductAdapter.notifyDataSetChanged();
                         } else {
-                            // Xử lý lỗi khi task không thành công
+                            // Xử lý lỗi nếu task không thành công
                             Log.d("popRecyclerView", "Error getting documents: ", task.getException());
                         }
                     }
                 });
     }
-
 }
